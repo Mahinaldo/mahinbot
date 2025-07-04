@@ -17,7 +17,7 @@ import {
   SendHorizontalIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSidebar } from "@/components/ui/sidebar";
 
 import { Button } from "@/components/ui/button";
@@ -28,7 +28,16 @@ import BlurText from './BlurText';
 
 export const Thread: FC = () => {
   const threadRef = useRef<any>(null);
-  const { state } = typeof window !== 'undefined' && window.innerWidth > 768 ? require("@/components/ui/sidebar").useSidebar() : { state: "collapsed" };
+  // SSR-safe sidebar state for input margin
+  const [sidebarState, setSidebarState] = useState<'collapsed' | 'expanded'>('collapsed');
+  // Only update sidebarState on client
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.innerWidth > 768) {
+      try {
+        setSidebarState(useSidebar().state);
+      } catch {}
+    }
+  }, []);
 
   // Hydrate messages from localStorage on mount (fallback: show as system message)
   useEffect(() => {
@@ -84,7 +93,7 @@ export const Thread: FC = () => {
                 <div className="min-h-8 flex-grow" style={{ background: 'none' }} />
               </ThreadPrimitive.If>
             </ThreadPrimitive.Viewport>
-            <div className={`fixed bottom-0 left-0 w-full flex justify-center z-20 mb-6 transition-all duration-300 ${state === 'expanded' ? 'ml-[12rem]' : ''}`} style={{ pointerEvents: 'auto' }}>
+            <div className={`fixed bottom-0 left-0 w-full flex justify-center z-20 mb-6 transition-all duration-300 ${sidebarState === 'expanded' ? 'ml-[12rem]' : ''}`} style={{ pointerEvents: 'auto' }}>
               <div className="w-full max-w-[var(--thread-max-width)]">
                 <Composer />
               </div>
