@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Dither from "@/components/assistant-ui/Dither";
+import DitherBackground from "./DitherBackground";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,18 +31,7 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
       </head>
       <body style={{ background: 'transparent', position: 'relative', minHeight: '100vh', overflow: 'auto' }}>
-        <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'auto' }}>
-          <Dither
-            waveColor={[0.5, 0.5, 0.5]}
-            disableAnimation={false}
-            enableMouseInteraction={true}
-            mouseRadius={0.3}
-            colorNum={4}
-            waveAmplitude={0.3}
-            waveFrequency={3}
-            waveSpeed={0.05}
-          />
-        </div>
+        <DitherBackground />
         <div style={{ position: 'relative', zIndex: 1 }} className="min-h-screen">
           {children}
         </div>
