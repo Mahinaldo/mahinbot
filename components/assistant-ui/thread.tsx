@@ -84,7 +84,7 @@ export const Thread: FC = () => {
                 <div className="min-h-8 flex-grow" style={{ background: 'none' }} />
               </ThreadPrimitive.If>
             </ThreadPrimitive.Viewport>
-            <div className={`fixed bottom-0 left-0 w-full flex justify-center z-20 mb-6 transition-all duration-300 ${state === 'expanded' ? 'ml-[16rem]' : ''}`} style={{ pointerEvents: 'auto' }}>
+            <div className={`fixed bottom-0 left-0 w-full flex justify-center z-20 mb-6 transition-all duration-300 ${state === 'expanded' ? 'ml-[12rem]' : ''}`} style={{ pointerEvents: 'auto' }}>
               <div className="w-full max-w-[var(--thread-max-width)]">
                 <Composer />
               </div>
