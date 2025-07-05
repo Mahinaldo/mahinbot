@@ -28,44 +28,48 @@ import BlurText from './BlurText';
 
 export const Thread: FC = () => {
   const threadRef = useRef<any>(null);
-  // SSR-safe sidebar state for input margin
-  const [sidebarState, setSidebarState] = useState<'collapsed' | 'expanded'>('collapsed');
-  // Only update sidebarState on client
+  const { state: sidebarState } = useSidebar();
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if mobile
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.innerWidth > 768) {
-      try {
-        setSidebarState(useSidebar().state);
-      } catch {}
-    }
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Hydrate messages from localStorage on mount (fallback: show as system message)
-  useEffect(() => {
-    const saved = localStorage.getItem("chatloom-thread-messages");
-    if (saved && threadRef.current) {
-      try {
-        const messages = JSON.parse(saved);
-        // If the library does not expose setMessages, show as a system message
-        if (!threadRef.current.setMessages && messages.length > 0) {
-          const container = document.createElement("div");
-          container.className = "bg-muted text-foreground rounded-3xl px-5 py-2.5 my-2";
-          container.innerText = messages.map((m: any) => m.role + ': ' + m.content).join('\n');
-          threadRef.current.appendChild(container);
-        }
-      } catch {}
-    }
-  }, []);
-
-  // Save messages to localStorage on every update (fallback: serialize DOM)
+  // Save messages to localStorage on every update
   useEffect(() => {
     if (!threadRef.current) return;
-    const messageNodes = threadRef.current.querySelectorAll('[data-slot="message-content"]');
-    const messages = Array.from(messageNodes).map((node: any) => ({
-      role: node.closest('[data-slot="message-root"]').classList.contains('user') ? 'user' : 'assistant',
-      content: node.textContent
-    }));
-    localStorage.setItem("chatloom-thread-messages", JSON.stringify(messages));
-  });
+    
+    const saveMessages = () => {
+      const messageNodes = threadRef.current.querySelectorAll('[data-slot="message-content"]');
+      const messages = Array.from(messageNodes).map((node: any) => ({
+        role: node.closest('[data-slot="message-root"]').classList.contains('user') ? 'user' : 'assistant',
+        content: node.textContent,
+        timestamp: new Date().toISOString()
+      }));
+      
+      if (messages.length > 0) {
+        localStorage.setItem("chatloom-thread-messages", JSON.stringify(messages));
+      }
+    };
+
+    // Save messages whenever the DOM changes
+    const observer = new MutationObserver(saveMessages);
+    if (threadRef.current) {
+      observer.observe(threadRef.current, { 
+        childList: true, 
+        subtree: true, 
+        characterData: true 
+      });
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', flexDirection: 'column', minHeight: '0', background: 'none' }}>
@@ -80,8 +84,12 @@ export const Thread: FC = () => {
           }}
         >
           <div className="flex flex-col flex-1 min-h-0">
-            <ThreadPrimitive.Viewport className="flex flex-col flex-1 min-h-0 items-center overflow-y-auto scroll-smooth px-4 pt-8 pb-32" style={{ background: 'none' }}>
-              <ThreadWelcome />
+            <ThreadPrimitive.Viewport 
+              data-slot="thread-viewport"
+              className="flex flex-col flex-1 min-h-0 items-center overflow-y-auto scroll-smooth px-4 pt-8 pb-32" 
+              style={{ background: 'none' }}
+            >
+              <ThreadWelcome sidebarState={sidebarState} isMobile={isMobile} />
               <ThreadPrimitive.Messages
                 components={{
                   UserMessage: UserMessage,
@@ -93,7 +101,14 @@ export const Thread: FC = () => {
                 <div className="min-h-8 flex-grow" style={{ background: 'none' }} />
               </ThreadPrimitive.If>
             </ThreadPrimitive.Viewport>
-            <div className={`fixed bottom-0 left-0 w-full flex justify-center z-20 mb-6 transition-all duration-300 ${sidebarState === 'expanded' ? 'ml-[12rem]' : ''}`} style={{ pointerEvents: 'auto' }}>
+            <div 
+              className={cn(
+                "fixed bottom-0 left-0 w-full flex justify-center z-20 mb-6 transition-all duration-500 ease-in-out",
+                isMobile ? "mobile-input-container" : "",
+                sidebarState === 'expanded' && !isMobile ? 'left-[16rem] w-[calc(100%-16rem)]' : 'left-0 w-full'
+              )}
+              style={{ pointerEvents: 'auto' }}
+            >
               <div className="w-full max-w-[var(--thread-max-width)]">
                 <Composer />
               </div>
@@ -119,10 +134,15 @@ const ThreadScrollToBottom: FC = () => {
   );
 };
 
-const ThreadWelcome: FC = () => {
+const ThreadWelcome: FC<{ sidebarState: 'expanded' | 'collapsed'; isMobile: boolean }> = ({ sidebarState, isMobile }) => {
   return (
     <ThreadPrimitive.Empty>
-      <div className="flex w-full max-w-[var(--thread-max-width)] flex-grow flex-col items-center justify-center">
+      <div 
+        className={cn(
+          "welcome-container flex w-full max-w-[var(--thread-max-width)] flex-grow flex-col items-center justify-center transition-all duration-500 ease-in-out",
+          sidebarState === 'expanded' && !isMobile ? 'ml-[8rem]' : 'ml-0'
+        )}
+      >
         <div
           className="welcome-bubble px-8 py-6 mb-4 rounded-2xl backdrop-blur-xl"
           style={{
@@ -133,9 +153,21 @@ const ThreadWelcome: FC = () => {
             alignItems: 'center',
             justifyContent: 'center',
             minHeight: '90px',
+            maxWidth: '100%',
+            wordWrap: 'break-word',
+            overflowWrap: 'break-word',
           }}
         >
-          <BlurText text="How can I help you today?" delay={120} className="text-3xl md:text-5xl font-bold" animateBy="words" direction="top" />
+          <BlurText 
+            text="How can I help you today?" 
+            delay={120} 
+            className={cn(
+              "font-bold",
+              isMobile ? "text-2xl md:text-3xl" : "text-3xl md:text-5xl"
+            )} 
+            animateBy="words" 
+            direction="top" 
+          />
         </div>
         <ThreadWelcomeSuggestions />
       </div>
@@ -145,19 +177,19 @@ const ThreadWelcome: FC = () => {
 
 const ThreadWelcomeSuggestions: FC = () => {
   return (
-    <>
+    <div className="flex flex-wrap justify-center gap-2 max-w-full">
       <ThreadPrimitive.Suggestion prompt="Summarize this text" />
       <ThreadPrimitive.Suggestion prompt="Write a poem about technology" />
       <ThreadPrimitive.Suggestion prompt="Explain quantum computing in simple terms" />
       <ThreadPrimitive.Suggestion prompt="Translate 'Hello, how are you?' to French" />
       <ThreadPrimitive.Suggestion prompt="Generate a JavaScript function to reverse a string" />
-    </>
+    </div>
   );
 };
 
 const Composer: FC = () => {
   return (
-    <ComposerPrimitive.Root className="flex w-full flex-wrap items-end rounded-lg border-none bg-transparent px-2.5 shadow-none transition-colors ease-in">
+    <ComposerPrimitive.Root className="composer-root flex w-full flex-wrap items-end rounded-lg border-none bg-transparent px-2.5 shadow-none transition-colors ease-in">
       <ComposerPrimitive.Input
         rows={1}
         autoFocus
@@ -198,9 +230,8 @@ const UserMessage: FC = () => {
           <MessagePrimitive.Content />
         </div>
         <div className="flex justify-end mt-2">
-          <UserActionBar alwaysVisible />
+          <UserActionBar />
         </div>
-        <BranchPicker className="col-span-full col-start-1 row-start-3 -mr-1 justify-end" />
       </MessagePrimitive.Root>
     </div>
   );
@@ -209,12 +240,18 @@ const UserMessage: FC = () => {
 const UserActionBar: FC<{ alwaysVisible?: boolean }> = ({ alwaysVisible }) => {
   return (
     <ActionBarPrimitive.Root
-      hideWhenRunning={false}
-      autohide={alwaysVisible ? 'never' : undefined}
-      className={"flex flex-col items-end col-start-1 row-start-2 mr-3 mt-2.5" + (alwaysVisible ? " opacity-100" : "")}
+      className={cn(
+        "flex items-center gap-1",
+        alwaysVisible ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+      )}
     >
+      <ActionBarPrimitive.Copy asChild>
+        <TooltipIconButton tooltip="Copy message" variant="ghost" size="sm">
+          <CopyIcon />
+        </TooltipIconButton>
+      </ActionBarPrimitive.Copy>
       <ActionBarPrimitive.Edit asChild>
-        <TooltipIconButton tooltip="Edit">
+        <TooltipIconButton tooltip="Edit message" variant="ghost" size="sm">
           <PencilIcon />
         </TooltipIconButton>
       </ActionBarPrimitive.Edit>
@@ -226,7 +263,6 @@ const EditComposer: FC = () => {
   return (
     <ComposerPrimitive.Root className="bg-muted my-4 flex w-full max-w-[var(--thread-max-width)] flex-col gap-2 rounded-xl">
       <ComposerPrimitive.Input className="text-foreground flex h-8 w-full resize-none bg-transparent p-4 pb-0 outline-none" />
-
       <div className="mx-3 mb-3 flex items-center justify-center gap-2 self-end">
         <ComposerPrimitive.Cancel asChild>
           <Button variant="ghost">Cancel</Button>
@@ -244,10 +280,11 @@ const AssistantMessage: FC = () => {
     <div className="w-full flex justify-start">
       <MessagePrimitive.Root className="message-bubble max-w-[60%] mr-auto" style={{ alignSelf: 'flex-start', textAlign: 'left' }}>
         <div>
-          <MessagePrimitive.Content components={{ Text: MarkdownText, tools: { Fallback: ToolFallback } }} />
+          <MessagePrimitive.Content />
         </div>
-        <AssistantActionBar alwaysVisible />
-        <BranchPicker className="col-start-2 row-start-2 -ml-2 mr-2" />
+        <div className="flex justify-start mt-2">
+          <AssistantActionBar />
+        </div>
       </MessagePrimitive.Root>
     </div>
   );
@@ -256,26 +293,22 @@ const AssistantMessage: FC = () => {
 const AssistantActionBar: FC<{ alwaysVisible?: boolean }> = ({ alwaysVisible }) => {
   return (
     <ActionBarPrimitive.Root
-      hideWhenRunning={false}
-      autohide={alwaysVisible ? 'never' : undefined}
-      autohideFloat={alwaysVisible ? 'never' : undefined}
-      className={"text-muted-foreground flex gap-1 col-start-3 row-start-2 -ml-1 opacity-100" + (alwaysVisible ? " opacity-100" : "")}
+      className={cn(
+        "flex items-center gap-1",
+        alwaysVisible ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+      )}
     >
       <ActionBarPrimitive.Copy asChild>
-        <TooltipIconButton tooltip="Copy">
-          <MessagePrimitive.If copied>
-            <CheckIcon />
-          </MessagePrimitive.If>
-          <MessagePrimitive.If copied={false}>
-            <CopyIcon />
-          </MessagePrimitive.If>
+        <TooltipIconButton tooltip="Copy message" variant="ghost" size="sm">
+          <CopyIcon />
         </TooltipIconButton>
       </ActionBarPrimitive.Copy>
       <ActionBarPrimitive.Reload asChild>
-        <TooltipIconButton tooltip="Refresh">
+        <TooltipIconButton tooltip="Regenerate message" variant="ghost" size="sm">
           <RefreshCwIcon />
         </TooltipIconButton>
       </ActionBarPrimitive.Reload>
+      <BranchPicker />
     </ActionBarPrimitive.Root>
   );
 };
@@ -294,7 +327,7 @@ const BranchPicker: FC<BranchPickerPrimitive.Root.Props> = ({
       {...rest}
     >
       <BranchPickerPrimitive.Previous asChild>
-        <TooltipIconButton tooltip="Previous">
+        <TooltipIconButton tooltip="Previous" variant="ghost" size="sm">
           <ChevronLeftIcon />
         </TooltipIconButton>
       </BranchPickerPrimitive.Previous>
@@ -302,7 +335,7 @@ const BranchPicker: FC<BranchPickerPrimitive.Root.Props> = ({
         <BranchPickerPrimitive.Number /> / <BranchPickerPrimitive.Count />
       </span>
       <BranchPickerPrimitive.Next asChild>
-        <TooltipIconButton tooltip="Next">
+        <TooltipIconButton tooltip="Next" variant="ghost" size="sm">
           <ChevronRightIcon />
         </TooltipIconButton>
       </BranchPickerPrimitive.Next>
@@ -313,13 +346,19 @@ const BranchPicker: FC<BranchPickerPrimitive.Root.Props> = ({
 const CircleStopIcon = () => {
   return (
     <svg
+      width="15"
+      height="15"
+      viewBox="0 0 15 15"
+      fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 16 16"
-      fill="currentColor"
-      width="16"
-      height="16"
+      className="h-4 w-4"
     >
-      <rect width="10" height="10" x="3" y="3" rx="2" />
+      <path
+        d="M6.79289 1.5C6.79289 1.22386 6.56903 1 6.29289 1C6.01675 1 5.79289 1.22386 5.79289 1.5V6.5C5.79289 6.77614 6.01675 7 6.29289 7H11.2929C11.569 7 11.7929 6.77614 11.7929 6.5C11.7929 6.22386 11.569 6 11.2929 6H6.79289V1.5ZM1.14645 8.14645C1.34171 7.95118 1.65829 7.95118 1.85355 8.14645L8.85355 15.1464C9.04882 15.3417 9.04882 15.6583 8.85355 15.8536C8.65829 16.0488 8.34171 16.0488 8.14645 15.8536L1.14645 8.85355C0.951184 8.65829 0.951184 8.34171 1.14645 8.14645Z"
+        fill="currentColor"
+        fillRule="evenodd"
+        clipRule="evenodd"
+      />
     </svg>
   );
 };

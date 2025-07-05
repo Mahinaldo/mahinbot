@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import DitherBackground from "./DitherBackground";
+import { AppWrapper } from "@/components/app-wrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,9 +33,18 @@ export default function RootLayout({
       </head>
       <body style={{ background: 'transparent', position: 'relative', minHeight: '100vh', overflow: 'auto' }}>
         <DitherBackground />
-        <div style={{ position: 'relative', zIndex: 1 }} className="min-h-screen">
-          {children}
-        </div>
+        <AppWrapper>
+          <div 
+            className="app-content min-h-screen"
+            style={{ 
+              position: 'relative', 
+              zIndex: 1,
+              animation: 'fadeIn 0.8s ease-out'
+            }} 
+          >
+            {children}
+          </div>
+        </AppWrapper>
       </body>
     </html>
   );

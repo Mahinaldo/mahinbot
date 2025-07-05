@@ -267,17 +267,6 @@ function Sidebar({
               }}
             >
               {children}
-              <div className="flex flex-col sm:flex-row items-center justify-end gap-2 sm:gap-4 mt-auto mb-4 w-full text-center">
-                <span style={{ color: '#f8f8f8', fontWeight: 600, fontSize: 18, marginBottom: 8 }}>Support Us</span>
-                <div className="flex flex-row items-center justify-center gap-4 w-full">
-                  <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" style={{ color: '#f8f8f8' }}>
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#0077B5"/><path d="M10.666 13.333h2.667v8H10.666v-8zm1.333-4a1.333 1.333 0 110 2.667 1.333 1.333 0 010-2.667zm3.334 4h2.56v1.093h.037c.356-.675 1.226-1.387 2.523-1.387 2.7 0 3.2 1.773 3.2 4.08v4.214h-2.667v-3.733c0-.89-.016-2.04-1.24-2.04-1.24 0-1.427.97-1.427 1.97v3.803h-2.667v-8z" fill="#fff"/></svg>
-                  </a>
-                  <a href="https://www.fiverr.com/" target="_blank" rel="noopener noreferrer" aria-label="Fiverr" style={{ color: '#f8f8f8' }}>
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#1DBF73"/><text x="16" y="22" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#fff">Fiverr</text></svg>
-                  </a>
-                </div>
-              </div>
             </div>
           </div>
         </div>
