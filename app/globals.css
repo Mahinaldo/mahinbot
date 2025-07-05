@@ -594,3 +594,275 @@ html, body, * {
   transform: translateY(-2px);
   box-shadow: 0 8px 32px 0 rgba(0,0,0,0.25);
 }
+
+/* Action Bar Button Styles - Glass Background */
+.message-bubble .opacity-0,
+.message-bubble .group-hover\:opacity-100,
+.message-bubble button[data-radix-tooltip-trigger],
+.message-bubble .tooltip-icon-button,
+.message-bubble [role="button"],
+.message-bubble button,
+.message-bubble .action-bar-root button,
+.message-bubble .action-bar-root [role="button"],
+.message-bubble .opacity-0 button,
+.message-bubble .group-hover\:opacity-100 button,
+.message-bubble [data-slot="action-bar-root"] button,
+.message-bubble [data-slot="action-bar-root"] [role="button"] {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  backdrop-filter: blur(10px) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  transition: all 0.3s ease !important;
+  border-radius: 6px !important;
+  padding: 6px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.message-bubble .opacity-0:hover,
+.message-bubble .group-hover\:opacity-100:hover,
+.message-bubble button[data-radix-tooltip-trigger]:hover,
+.message-bubble .tooltip-icon-button:hover,
+.message-bubble [role="button"]:hover,
+.message-bubble button:hover,
+.message-bubble .action-bar-root button:hover,
+.message-bubble .action-bar-root [role="button"]:hover,
+.message-bubble .opacity-0 button:hover,
+.message-bubble .group-hover\:opacity-100 button:hover,
+.message-bubble [data-slot="action-bar-root"] button:hover,
+.message-bubble [data-slot="action-bar-root"] [role="button"]:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Make action bars always visible */
+.message-bubble .opacity-0,
+.message-bubble .group-hover\:opacity-100,
+.message-bubble [data-slot="action-bar-root"] {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  margin-top: 8px !important;
+  padding: 4px !important;
+  border-radius: 8px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(5px) !important;
+}
+
+/* Target Button component specifically */
+.message-bubble .button,
+.message-bubble button[class*="button"],
+.message-bubble [class*="size-6"],
+.message-bubble [class*="p-1"] {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  backdrop-filter: blur(10px) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  transition: all 0.3s ease !important;
+  border-radius: 6px !important;
+  padding: 6px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.message-bubble .button:hover,
+.message-bubble button[class*="button"]:hover,
+.message-bubble [class*="size-6"]:hover,
+.message-bubble [class*="p-1"]:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Icon styling within buttons */
+.message-bubble button svg,
+.message-bubble [role="button"] svg,
+.message-bubble .tooltip-icon-button svg,
+.message-bubble .button svg,
+.message-bubble [class*="size-6"] svg {
+  width: 16px !important;
+  height: 16px !important;
+  color: white !important;
+}
+
+/* Branch picker specific styling */
+.message-bubble .branch-picker-root,
+.message-bubble [data-slot="branch-picker-root"] {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  backdrop-filter: blur(10px) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  border-radius: 6px !important;
+  padding: 4px 8px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.message-bubble .branch-picker-root:hover,
+.message-bubble [data-slot="branch-picker-root"]:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Override any ghost variant styling */
+.message-bubble button[data-variant="ghost"],
+.message-bubble .ghost {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  backdrop-filter: blur(10px) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.message-bubble button[data-variant="ghost"]:hover,
+.message-bubble .ghost:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Edit Composer Styles - Glass Background */
+.edit-composer-root,
+.message-bubble .bg-muted,
+.message-bubble [class*="bg-muted"] {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.3s ease !important;
+  margin: 1rem 0 !important;
+  padding: 1rem !important;
+}
+
+.edit-composer-root:focus-within,
+.message-bubble .bg-muted:focus-within,
+.message-bubble [class*="bg-muted"]:focus-within {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: #00fff7 !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 0 8px 1px rgba(0, 255, 247, 0.5) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Edit composer input styling */
+.edit-composer-root input,
+.edit-composer-root textarea,
+.message-bubble .bg-muted input,
+.message-bubble .bg-muted textarea,
+.message-bubble [class*="bg-muted"] input,
+.message-bubble [class*="bg-muted"] textarea {
+  background: transparent !important;
+  color: white !important;
+  border: none !important;
+  outline: none !important;
+  resize: none !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+  width: 100% !important;
+  padding: 0.5rem !important;
+}
+
+.edit-composer-root input::placeholder,
+.edit-composer-root textarea::placeholder,
+.message-bubble .bg-muted input::placeholder,
+.message-bubble .bg-muted textarea::placeholder,
+.message-bubble [class*="bg-muted"] input::placeholder,
+.message-bubble [class*="bg-muted"] textarea::placeholder {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Edit composer button container */
+.edit-composer-root .mx-3,
+.message-bubble .bg-muted .mx-3,
+.message-bubble [class*="bg-muted"] .mx-3 {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 0.5rem !important;
+  margin-top: 0.5rem !important;
+}
+
+/* Edit composer buttons */
+.edit-composer-root button,
+.message-bubble .bg-muted button,
+.message-bubble [class*="bg-muted"] button {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  backdrop-filter: blur(10px) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  transition: all 0.3s ease !important;
+  border-radius: 8px !important;
+  padding: 0.5rem 1rem !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+}
+
+.edit-composer-root button:hover,
+.message-bubble .bg-muted button:hover,
+.message-bubble [class*="bg-muted"] button:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Specific styling for Cancel and Send buttons */
+.edit-composer-root button[data-variant="ghost"],
+.message-bubble .bg-muted button[data-variant="ghost"],
+.message-bubble [class*="bg-muted"] button[data-variant="ghost"] {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.edit-composer-root button[data-variant="ghost"]:hover,
+.message-bubble .bg-muted button[data-variant="ghost"]:hover,
+.message-bubble [class*="bg-muted"] button[data-variant="ghost"]:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Send button special styling */
+.edit-composer-root button:not([data-variant="ghost"]),
+.message-bubble .bg-muted button:not([data-variant="ghost"]),
+.message-bubble [class*="bg-muted"] button:not([data-variant="ghost"]) {
+  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.edit-composer-root button:not([data-variant="ghost"]):hover,
+.message-bubble .bg-muted button:not([data-variant="ghost"]):hover,
+.message-bubble [class*="bg-muted"] button:not([data-variant="ghost"]):hover {
+  background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.2) 100%) !important;
+  border-color: rgba(255, 255, 255, 0.6) !important;
+}

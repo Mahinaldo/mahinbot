@@ -240,10 +240,7 @@ const UserMessage: FC = () => {
 const UserActionBar: FC<{ alwaysVisible?: boolean }> = ({ alwaysVisible }) => {
   return (
     <ActionBarPrimitive.Root
-      className={cn(
-        "flex items-center gap-1",
-        alwaysVisible ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-      )}
+      className="flex items-center gap-1 opacity-100"
     >
       <ActionBarPrimitive.Copy asChild>
         <TooltipIconButton tooltip="Copy message" variant="ghost" size="sm">
@@ -261,7 +258,7 @@ const UserActionBar: FC<{ alwaysVisible?: boolean }> = ({ alwaysVisible }) => {
 
 const EditComposer: FC = () => {
   return (
-    <ComposerPrimitive.Root className="bg-muted my-4 flex w-full max-w-[var(--thread-max-width)] flex-col gap-2 rounded-xl">
+    <ComposerPrimitive.Root className="edit-composer-root bg-muted my-4 flex w-full max-w-[var(--thread-max-width)] flex-col gap-2 rounded-xl">
       <ComposerPrimitive.Input className="text-foreground flex h-8 w-full resize-none bg-transparent p-4 pb-0 outline-none" />
       <div className="mx-3 mb-3 flex items-center justify-center gap-2 self-end">
         <ComposerPrimitive.Cancel asChild>
@@ -293,10 +290,7 @@ const AssistantMessage: FC = () => {
 const AssistantActionBar: FC<{ alwaysVisible?: boolean }> = ({ alwaysVisible }) => {
   return (
     <ActionBarPrimitive.Root
-      className={cn(
-        "flex items-center gap-1",
-        alwaysVisible ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-      )}
+      className="flex items-center gap-1 opacity-100"
     >
       <ActionBarPrimitive.Copy asChild>
         <TooltipIconButton tooltip="Copy message" variant="ghost" size="sm">
