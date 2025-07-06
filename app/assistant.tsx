@@ -15,13 +15,15 @@ export const Assistant = () => {
   return (
     <AssistantRuntimeProvider runtime={runtime}>
       <SidebarProvider>
-        <AppSidebar />
-        <SidebarInset>
-          <div className="flex justify-end p-2">
-            <SidebarTrigger />
-          </div>
-          <Thread />
-        </SidebarInset>
+        <div style={{ display: "flex", height: "100dvh", width: "100vw", overflow: "hidden" }}>
+          <AppSidebar />
+          <SidebarInset style={{ flex: 1, overflowY: "auto", height: "100dvh" }}>
+            <div className="flex justify-end p-2">
+              <SidebarTrigger />
+            </div>
+            <Thread />
+          </SidebarInset>
+        </div>
       </SidebarProvider>
     </AssistantRuntimeProvider>
   );
