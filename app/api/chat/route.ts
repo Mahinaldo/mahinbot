@@ -2,11 +2,16 @@ import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { streamText } from "ai";
 import { frontendTools } from "@assistant-ui/react-ai-sdk";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 export const maxDuration = 30;
 
+const apiKey = process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY_2;
+if (!apiKey) {
+  console.error("No OpenAI API key found. Please set OPENAI_API_KEY or OPENAI_API_KEY_2 in your environment.");
+}
+
 const openrouter = createOpenRouter({
-  apiKey: process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY_2,
+  apiKey,
   // Optionally, add Referer and X-Title headers for leaderboard ranking
   // headers: {
   //   "HTTP-Referer": "<YOUR_SITE_URL>",
