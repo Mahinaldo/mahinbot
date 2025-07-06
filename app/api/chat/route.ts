@@ -6,7 +6,7 @@ export const runtime = "edge";
 export const maxDuration = 30;
 
 const openrouter = createOpenRouter({
-  apiKey: process.env.OPENAI_API_KEY!,
+  apiKey: process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY_2,
   // Optionally, add Referer and X-Title headers for leaderboard ranking
   // headers: {
   //   "HTTP-Referer": "<YOUR_SITE_URL>",
