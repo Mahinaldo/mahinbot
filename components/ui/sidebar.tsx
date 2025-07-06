@@ -257,6 +257,7 @@ function Sidebar({
             data-sidebar="sidebar"
             data-slot="sidebar-inner"
             className="flex h-full w-full flex-col items-center justify-center"
+            style={{ height: '100dvh', overflow: 'hidden' }}
           >
             <div
               className="sidebar-glass-bubble flex flex-col w-[92%] h-[96%] mt-2 rounded-2xl shadow-2xl backdrop-blur-xl"
@@ -264,6 +265,8 @@ function Sidebar({
                 background: 'rgba(0,0,0,0.18)',
                 color: '#f8f8f8',
                 boxShadow: '0 4px 32px 0 rgba(0,0,0,0.18)',
+                height: '100%',
+                overflow: 'hidden',
               }}
             >
               {children}
@@ -395,7 +398,7 @@ function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="sidebar-content"
       data-sidebar="content"
       className={cn(
-        "flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
+        "flex min-h-0 flex-1 flex-col gap-2 overflow-hidden group-data-[collapsible=icon]:overflow-hidden",
         className
       )}
       {...props}
